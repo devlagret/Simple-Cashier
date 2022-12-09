@@ -24,3 +24,4 @@ Apikasi ini dibuat menggunakan template [Gentelella](https://github.com/Colorlib
 - Aplikasi web ini masih dalam tahap pengembangan jadi ada beberapa halaman yang belum selesai dan mungkin masih banyak terjadi error
 - Saat ini belum diimplementasikan cara untuk menambah dan merubah password user yang ada
 - Username bawaan : admin    - Password bawaan : admin
+- Saat ini sedang ada masalah dengan penyedia laman web gratis [https://id.000webhost.com/](https://id.000webhost.com/) yang saya gunakan sehingga demo secara online belum tersedia
