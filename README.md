@@ -3,12 +3,6 @@
 Ini adalah aplikasi kasir sederhana berbasis web tanpa framework
 Apikasi ini dibuat menggunakan template [Gentelella](https://github.com/ColorlibHQ/gentelella) dari [Colorlib](https://colorlib.com/)
 
-
-
-## Daftar Isi
-- [Aplikasi kasir sederhana berbasis WEB](#aplikasi-kasir-sederhana-berbasis-web)
-- [Daftar Isi](#daftar-isi)
-
 ## Instalasi
 ### (Menggunakan sofware xampp)
 1. Download dan extrak file di file htdocs
