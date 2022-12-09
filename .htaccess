@@ -1,0 +1,19 @@
+DirectoryIndex index.php
+RewriteEngine on
+
+RewriteBase /kasir/
+RewriteRule ^(.*)$ - 
+
+RewriteRule ^home/?$ index.php [NC,L]
+RewriteRule ^login/?$ view/login.php [NC,L]
+RewriteRule ^forbiden/?$ view/403.php [NC,L]
+
+
+# To internally redirect /dir/foo to /dir/foo.php
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^ %{REQUEST_URI}.php [L]
+
+# redirect error page
+ErrorDocument 403 http://localhost/kasir/view/403
+ErrorDocument 404 http://localhost/kasir/view/404
+ErrorDocument 500 http://localhost/kasir/view/500
