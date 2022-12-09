@@ -11,11 +11,14 @@ Apikasi ini dibuat menggunakan template [Gentelella](https://github.com/Colorlib
 
 ## Instalasi
 ### (Menggunakan sofware xampp)
-1. Download dan extrak file di file htdoc
+1. Download dan extrak file di file htdocs
 2. Buat database bernama kasir
-3. Import kode [SQL database yang digunakan](database.sql)
+3. Import kode [SQL database yang digunakan](database.sql) ke dalam database kasir
 4. Jika saat membuka situs diharuskan login maka gunakan username 'admin' dan password 'admin'
 
+## Configurasi
+- Configurasi database bisa dilakukan di 'function/database.php'
+- Configurasi umum bisa dilakukan di 'function/config.php'
 
 #### Catatan
 - Aplikasi web ini masih dalam tahap pengembangan jadi ada beberapa halaman yang belum selesai dan mungkin masih banyak terjadi error
