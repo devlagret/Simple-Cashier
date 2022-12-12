@@ -2,9 +2,9 @@
 	//session_start();
 
 $host = 'localhost';
-$username = 'id19555243_admin';
-$pass = 'devlagret123';
-$db_name = 'id19555243_kasir';
+$username = 'root';
+$pass = '';
+$db_name = 'kasir';
 $koneksi = mysqli_connect($host, $username, $pass, $db_name);
 $con = new mysqli($host,$username,$pass,$db_name);
 if (!$koneksi) {
