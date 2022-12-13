@@ -36,49 +36,57 @@ if(isset($_POST['login'])){
 	//header('Location:'.$base_url.'/'	);
 }
 if(isset($_POST['tambah_produk'])){
-	
-	$add_nama_produk = mysqli_real_escape_string($koneksi,$_POST['nama-produk']);
-	$add_harga_satuan = toInt($_POST['harga-satuan']);
-	$add_stok= toInt($_POST['stok']);
-	$add_satuan = mysqli_real_escape_string($koneksi,$_POST['satuan']);
- $add_stok_min = toInt($_POST['stok-min']);
-
-	$add = mysqli_query($koneksi, "INSERT INTO `tbl_produk` (`id`, `nama_produk`, `harga_satuan`, `stok`, `stok_min`, `satuan`) VALUES (NULL, '$add_nama_produk', '$add_harga_satuan', '$add_stok', '$add_stok_min','$add_satuan')");
-	if($add){
-		header("Location:".$base_url."/view/tambah_produk?add=berhasil");
-	}else{
-		header("Location:".$base_url."/view/tambah_produk?add=gagal");
-	}
+	if (auth()) {
+		$add_nama_produk = mysqli_real_escape_string($koneksi, $_POST['nama-produk']);
+		$add_harga_satuan = toInt($_POST['harga-satuan']);
+		$add_stok = toInt($_POST['stok']);
+		$add_satuan = mysqli_real_escape_string($koneksi, $_POST['satuan']);
+		$add_stok_min = toInt($_POST['stok-min']);
+		$add = mysqli_query($koneksi, "INSERT INTO `tbl_produk` (`id`, `nama_produk`, `harga_satuan`, `stok`, `stok_min`, `satuan`) VALUES (NULL, '$add_nama_produk', '$add_harga_satuan', '$add_stok', '$add_stok_min','$add_satuan')");
+		if ($add) {
+			header("Location:" . $base_url . "/view/tambah_produk?add=berhasil");
+		} else {
+			header("Location:" . $base_url . "/view/tambah_produk?add=gagal");
+		}
+	}else{header("Location:".$base_url."/forbiden");}
 }
 if(isset($_POST['add_stkprd'])){
 $id = mysqli_real_escape_string($koneksi,$_POST['id']);
 $jumlah = toInt($_POST['jumlah']);
-if($jumlah <= 0){header("Location:".$base_url."/index?add=warn");}
-else{
-	$getstok = mysqli_query($koneksi, "SELECT stok FROM tbl_produk WHERE id = $id");
-	while ($row = mysqli_fetch_assoc($getstok)){
-	$finalstok = $row['stok'] + $jumlah;
-	$addstkprd = mysqli_query($koneksi, "call addstock($jumlah,$id)");}}
-if($addstkprd){header("Location:".$base_url."/index?add=berhasil");}
-else{header("Location:".$base_url."/index?add=gagal");}
+	if (auth()) {
+		if ($jumlah <= 0) {
+			header("Location:" . $base_url . "/index?add=warn");
+		} else {
+			$getstok = mysqli_query($koneksi, "SELECT stok FROM tbl_produk WHERE id = $id");
+			while ($row = mysqli_fetch_assoc($getstok)) {
+				$finalstok = $row['stok'] + $jumlah;
+				$addstkprd = mysqli_query($koneksi, "call addstock($jumlah,$id)");
+			}
+		}
+		if ($addstkprd) {
+			header("Location:" . $base_url . "/index?add=berhasil");
+		} else {
+			header("Location:" . $base_url . "/index?add=gagal");
+		}
+	}else{header("Location:".$base_url."/forbiden");}
 }
-if(isset($_POST['edit_produk'])){
+if (isset($_POST['edit_produk'])) {
 	$id = $_POST['id'];
 
-	$ed_nama_produk = mysqli_real_escape_string($koneksi,$_POST['nama-produk']);
+	$ed_nama_produk = mysqli_real_escape_string($koneksi, $_POST['nama-produk']);
 	$ed_harga_satuan = toInt($_POST['harga-satuan']);
-	$ed_stok= toInt($_POST['stok']);
-	$ed_stok_min= toInt($_POST['stok-min']);
-	$ed_satuan = mysqli_real_escape_string($koneksi,$_POST['satuan']);
+	$ed_stok = toInt($_POST['stok']);
+	$ed_stok_min = toInt($_POST['stok-min']);
+	$ed_satuan = mysqli_real_escape_string($koneksi, $_POST['satuan']);
+	if (auth()) {
+		$edit = mysqli_query($koneksi, "UPDATE tbl_produk SET nama_produk = '$ed_nama_produk', harga_satuan = '$ed_harga_satuan', stok = '$ed_stok',stok_min = '$ed_stok_min' , satuan = '$ed_satuan' WHERE id='$id'");
 
-
-	$edit = mysqli_query($koneksi, "UPDATE tbl_produk SET nama_produk = '$ed_nama_produk', harga_satuan = '$ed_harga_satuan', stok = '$ed_stok',stok_min = '$ed_stok_min' , satuan = '$ed_satuan' WHERE id='$id'");
-
-	if($edit){
-		header("Location:".$base_url."/view/produk?update=berhasil");
-	}else{
-		header("Location:".$base_url."/view/produk?update=gagal");
-	}
+		if ($edit) {
+			header("Location:" . $base_url . "/view/produk?update=berhasil");
+		} else {
+			header("Location:" . $base_url . "/view/produk?update=gagal");
+		}
+	}else{header("Location:".$base_url."/forbiden");}
 }
 if(isset($_GET['metode'])){
 	$metode = $_GET['metode'];
@@ -86,8 +94,8 @@ if(isset($_GET['metode'])){
 	
 	$jumlah = toInt($_GET['jumlah']);
 	
-if($metode=="nama"){
-		date_default_timezone_set("Asia/Jakarta");
+if($metode=="nama"&&auth()){
+	date_default_timezone_set("Asia/Jakarta");
 	$date = date("ymdHis");
 	$code = $date;
 	echo ($code.'<br>');
@@ -129,7 +137,7 @@ if($id!=null||$jumlah!=null){
 if (isset($_POST['edit_cart'])) {
 $id = mysqli_real_escape_string($koneksi,$_POST['id']);
 $jumlah = toInt($_POST['jumlah']);
-if(validatestok($id,$jumlah)){
+if(validatestok($id,$jumlah)&&auth()){
 $query = mysqli_query($koneksi, "UPDATE tmp_penjualan SET jumlah='$jumlah' WHERE nama_produk='$id'");
 if($query){
 	header("Location:".$base_url."/view/kasir?edit=berhasil");
@@ -145,7 +153,7 @@ $total = $_GET['total'];
 $uangbyr = $_GET['uangbyr'];
 if($uangbyr==null){$uangbyr=0;}
 if($total < $uangbyr){
-	if(validatecart()){
+	if(validatecart()&&auth()){
 		$kode = getcode();
 		echo  $kode;
 		$byr = setbayar($kode,$uangbyr);
@@ -270,25 +278,13 @@ return true;
 		return false;
 	}
 }
-function deletecartitm($id){
-	include 'config.php';
-	$q = mysqli_query($koneksi,"call getmincart()");
-  while(mysqli_next_result($koneksi)){;}
-	$row = mysqli_num_rows($q);
-	if ($row == 1){
-	$query = mysqli_query($koneksi, "DELETE FROM tmp_penjualan WHERE id=$id");
-  while(mysqli_next_result($koneksi)){;}
-	$cd = getcode();
-	$result = mysqli_query($koneksi,"call delpenjualan($cd)");
-	while(mysqli_next_result($koneksi)){;}
 
-	}elseif($row > 1){
-	$query = mysqli_query($koneksi, "DELETE FROM tmp_penjualan WHERE id=$id");
-  while(mysqli_next_result($koneksi)){;}
-
-	}
-
-}
+/**
+  * Get Config
+	* Get web configuration from database
+  * @param null
+	* @return bool|mysqli_result Returns `false` on failure. Returns configuration in form of result set { 'name' => 'value' }.
+  */
 function getconfig(){
 	include 'config.php';
 	$conf = array();
@@ -300,4 +296,50 @@ function getconfig(){
 	return $conf;
 }
 
-?>
+/**
+  * Authentication.
+	* Check if the user is already logged in before or not
+  * @param null
+	* @return bool Redirect to forbiden page if not logged in. If already logged in will return 'true'.
+  */
+function auth(){
+	include 'config.php';
+	if(isset($_COOKIE['id'])&&isset($_COOKIE['key'])){
+		$id=$_COOKIE['id'];
+		$key=$_COOKIE['key'];
+		//ambil usernae berdasar id
+		$result = mysqli_query($koneksi, "SELECT username FROM tbl_user WHERE id_user = $id");
+		while(mysqli_next_result($koneksi)){;}
+		$row = mysqli_fetch_assoc($result);
+		// cek cokkie dan username 
+		if ($key == hash('sha256',$row['username'])){
+			$_SESSION['status'] = "login";
+	 }}
+	 if (isset($_SESSION['status'])!="login"){
+	header("Location: http://localhost/kasir/forbiden") ;
+	} elseif (isset($_SESSION['status']) == "login") {
+	return true ;
+	}
+}
+/**
+ * Converts month.
+ * Converts number to month in indonesian language
+ * @param int $mouth
+ * @return String
+ */
+function convmonth(int $month){
+	if(0< $month && $month <=12){
+	$bln = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli','Agustus', 'September', 'Oktober', 'November', 'Desember'];
+	return $bln[$month-1];
+}else{return 'error';}
+}
+/**
+ * Used to get date range of sales. Returns max and min month and year.
+ * @return array|bool|null
+ */
+function getdaterange(){
+include 'config.php';
+$daterange = array();
+$rg = mysqli_query($koneksi,"call getsaledaterange()");
+return $daterange = mysqli_fetch_array($rg);
+}

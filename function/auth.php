@@ -4,8 +4,9 @@
 			$id=$_COOKIE['id'];
 			$key=$_COOKIE['key'];
 			//ambil usernae berdasar id
-			$result = mysqli_query($koneksi, "SELECT username FROM tbl_user WHERE id_user = $id");
-			$row = mysqli_fetch_assoc($result);
+			$rst = mysqli_query($koneksi, "SELECT username FROM tbl_user WHERE id_user = $id");
+			while(mysqli_next_result($koneksi)){;}
+			$row = mysqli_fetch_assoc($rst);
 			// cek cokkie dan username 
 			if ($key == hash('sha256',$row['username'])){
 				$_SESSION['status'] = "login";

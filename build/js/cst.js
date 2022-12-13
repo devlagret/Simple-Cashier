@@ -120,21 +120,6 @@ $('.txt.form-control').on('keydown', function () {
 	$(this).val(firstLetter + rest);
 });
 });
-//function tambahksr(inp,btn){
-//	inp.addEventListener("", function (e) {
-//if(inp >= 0){
-//console.log("input kosong");
-//const isDisable = btn.hasAttribute("disabled");
-//if(!isDisable) {
-//btn.setAttribute('disabled','true');
-//console.log("button has ben disabled");
-//}
-//}else{
-//	console.log("input ada");
-//	btn.removeAttribute("disabled");
-//}});
-//}
-
 
 const inpt = document.getElementById("kd-prd-txt");
 var aryk = [];
@@ -176,8 +161,9 @@ function byrr() {
 	var bayar = document.getElementById("jumlah-byr");
 	if(total.value > bayar.value ) {
 		console.log("uang kurang");
-		window.location.replace("http://localhost/kasir/view/kasir?info=uangkurang&uang="+bayar.value+"&fjs");
-
+		if(bayar.value == ""){
+		window.location.replace("http://localhost/kasir/view/kasir?info=uangkurang&uang=0&fjs");
+	}else{window.location.replace("http://localhost/kasir/view/kasir?info=uangkurang&uang="+bayar.value+"&fjs");}
 	}else {console.log("uang cukup");
 	document.getElementById("frm-ksr-byr").submit();
 }

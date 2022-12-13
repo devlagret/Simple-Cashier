@@ -5,7 +5,7 @@ foreach ($conf as $dta ){
   $config[$dta['name']] = $dta['value'];
 }
 //user autentification
-//include $include_path.'function/auth.php';
+include $include_path.'function/auth.php';
 ?>
 <div class="navbar nav_title" style="border: 0;">
               <a href="<?=$base_url?>/" class="site_title"><i class="fa-solid fa-cash-register"></i><span> KASIR</span></a>

@@ -74,6 +74,8 @@ if(isset($_GET['uang'])){$tot_byr=$_GET['uang'];}
 
             //menampilkan data kasir dari tabel
     $query = mysqli_query($koneksi, "call getcart();");
+	while(mysqli_next_result($koneksi)){;}
+
     //$jumorder = mysqli_fetch_row($query);
       ?>
       
@@ -125,18 +127,50 @@ if(isset($_GET['uang'])){$tot_byr=$_GET['uang'];}
   </div>
   <input type="submit" hidden />
 <button id="tbl-tbh" type="button" tabindex="4" name="addtocart" class="btn btn-success mt-1 mx-3" onclick="tambah()">Tambah</button>
-<button id="tbl-byr" type="button" tabindex="7" name="bayar" class="btn btn-success mt-1 mx-3" onclick="byrr()" <?php if(!validatecart()){echo 'disabled';} ?>>Bayar</button>   
+<button type="button" data-toggle="modal" tabindex="7" data-target="#bayar" class="btn btn-success mt-1 mx-3" <?php if(!validatecart()){echo 'disabled';} ?>>Bayar</button>   
 <button type="button"  data-toggle="modal" tabindex="6" data-target="#hapus-cart" class="btn btn-danger mt-1 mx-3">Batal</button>
+                  </form>
+<div class="modal fade <?php if(isset($_GET['uang'])){echo 'show';} ?>" id="bayar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Masukan uang yang dibayar : </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
+      <form autocomplete="off" action="<?=$base_url?>/function/crud.php" id="frm-ksr-byr"><input name="bayar" type="hidden" value="1"><input name="id" type="hidden" value="<?=$kode_penjualan?>">
+      <div class="row">
+      <div class="col-4"><h5>Total </h5></div>
+      <div class="col p-0"><h5>:</h5></div>
+      <div class="col-6"><h5>Rp. <?= number_format($tot_uf, 0, ',', '.')?> -  </h5></div>
+      </div>
+      <input type="hidden" id="total" value="<?=$t_dat['jumlah']?>" name="total">
+<div class="form-group row ">
+    <label for="jumlah-byr" class="col-sm-auto col-form-label">  Uang Dibayar: </label>
+    <div class="col-sm-1">
+      <input type="number" id="jumlah-byr" tabindex="6" name="uangbyr" min="100" step="100" value="<?=$tot_byr?>" placeholder="Masukan Jumlah Uang yang Dibayarkan" class="num form-control " style="width:160px;" <?php if(!validatecart()){echo 'disabled';} ?>>
+      <input type="submit" hidden /> 
+    </div>
+  </div>     
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-info
+                      " data-dismiss="modal">Close</button>
+                      <button class="btn btn-primary" id="btn" type="reset">Reset</button>
+                      <button id="tbl-byr" type="button" tabindex="8" name="bayar" class="btn btn-success" onclick="byrr()" <?php if(!validatecart()){echo 'disabled';} ?>>Bayar</button>   
+                  </form>
+      </div>
+    </div>
+  </div>
+</div>
 
                   </form>
-<form autocomplete="off" action="<?=$base_url?>/function/crud.php" id="frm-ksr-byr"><input name="bayar" type="hidden" value="1"><input name="id" type="hidden" value="<?=$kode_penjualan?>">
-<input type="hidden" id="total" value="<?=$t_dat['jumlah']?>" name="total">
-<div class="form-group row ml-5">
-    <label for="jumlah">  Uang Dibayar: </label>
-    <input type="number" id="jumlah-byr" tabindex="6" name="uangbyr" min="100" step="100" value="<?=$tot_byr?>" placeholder="Masukan Jumlah Uang yang Dibayarkan" class="num form-control mx-sm-4" style="width:260px!important;" <?php if(!validatecart()){echo 'disabled';} ?>>
-  <input type="submit" hidden /> 
-  </div>     
-  </form>
+
 
 <!-- Modal -->
       <div class="modal fade" id="hapus-cart" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

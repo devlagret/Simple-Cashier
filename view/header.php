@@ -1,7 +1,7 @@
 <?php include $_SERVER['DOCUMENT_ROOT'].'/kasir/function/crud.php';
 ?>	
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id_ID">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
