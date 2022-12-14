@@ -66,8 +66,8 @@ hr{
 		</style>
 	<script src="<?=$base_url?>/build/js/custom.js"></script>
 	<script>
-	// document.onload = window.print();
-	// window.onafterprint = function(event){ window.location.href = "http://localhost/kasir/view/kasir";}; 
+	 document.onload = window.print();
+	 window.onafterprint = function(event){ window.location.href = "http://localhost/kasir/view/kasir";}; 
 	 </script>
 </head>
 <body >	<?php

@@ -28,8 +28,14 @@
   $range = getdaterange();
   print_r($range);
   echo $range['bulan_min'];
-  $bulan = convmonth(11);
-  $tahun;
+  
+  if(isset($_GET['bulan'])&&isset($_GET['tahun'])){
+   $bulan = $_GET['bulan'];
+  $tahun = $_GET['tahun'];
+  } else {
+    $bulan = date('n');
+    $tahun = date('Y');
+  } 
   ?>
 
   <div class="container body">
@@ -43,7 +49,7 @@
             <div class="">
               <div class="page-title">
                 <div class="title_left">
-                  <h3>Laporan Penjualan Bulan <?= $bulan ?> tahun </h3>
+                  <h3>Laporan Penjualan Bulan <?= convmonth($bulan) ?> tahun <?=$tahun?></h3>
                 </div>
 
                 <div class="title_right">
@@ -103,7 +109,7 @@
                         <div class="clearfix"></div>
                       </div>
                       <div class="x_content">
-                        <div class="row">
+                        <div class="row pt-3">
                           <div class="col-sm-12">
                             <font>
                               <div class="card-box table-responsive">
@@ -111,9 +117,9 @@
                                   <thead>
                                     <tr>
                                       <th>No</th>
-                                      <th>Bulan</th>
+                                      <th>Nama Produk</th>
                                       <th>Jumlah Penjualan</th>
-                                      <th>Jumlah Pendapatan Kotor</th>
+                                      <th>Pendapatan</th>
                                       <th class="text-center">Aksi</th>
                                     </tr>
                                   </thead>
@@ -121,143 +127,34 @@
 
                                     <?php
                                     //menampilkan data dari tabel
-                                    $query = mysqli_query($koneksi, "SELECT * FROM tbl_penjualan order by id desc ");
+                                    $query = mysqli_query($koneksi, "call getlappjl($bulan,$tahun)");
                                     while (mysqli_next_result($koneksi)) {;
                                     }
                                     //membuat variabel untuk penomoran
-                                    $no = 1;
+                                    $n = 1;
                                     $jumlah = mysqli_num_rows($query);
                                     //perintah perulangan untuk menampilkan data
                                     while ($data = mysqli_fetch_assoc($query)) {
 
-
                                       //membuat variabel untuk menampung data 
-                                      $id = $data["id"];
                                       $kode_penjualan = $data['kode_penjualan'];
-                                      $tanggal_penjualan = $data['tanggal_penjualan'];
-
-                                      $date = date_create($tanggal_penjualan);
+                                      $id = $data["id"];
+                                      $nama_prd = $data['nama_produk'];
+                                      $j_penjualan = $data['jumlah'];
+                                      $pdpt = $data['pendapatan'];
+                              
                                     ?>
                                       <tr>
-                                        <td><?= $no++ ?></td>
-                                        <td><?php echo date_format($date, " d/m/Y H:i");
-                                            if (date_format($date, "Ymd") == date('Ymd')) {
-                                              echo ('&ensp;<span class="badge badge-success">Hari Ini</span>');
-                                            } ?></td>
-                                        <td><?= $kode_penjualan ?></td>
-                                        <td><?= $kode_penjualan ?></td>
+                                        <td><?= $n++ ?></td>
+                                        <td><?=$nama_prd?></td>
+                                        <td><?= $j_penjualan ?></td>
+                                        <td><?= $pdpt ?></td>
 
                                         <td class="text-center">
-                                          <!-- Detail -->
-                                          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#detail-pjl-<?= $id ?>"><i class="fa fa-circle-info"></i>&ensp;Detail
-                                          </button>
-                                          <!-- Modal -->
-                                          <div class="modal fade" id="detail-pjl-<?= $id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                              <div class="modal-content">
-                                                <div class="modal-header">
-                                                  <h5 class="modal-title" id="exampleModalLongTitle">Detail Penjualan Dengan Kode Penjualan : <?= $kode_penjualan ?></h5>
-                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                  </button>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                  <div class="card-box table-responsive">
-                                                    <table id="datatable" class="table text-center table-striped table-bordered" style="width:100%; font-size:<?= $font_size ?>;">
-                                                      <thead>
-                                                        <tr>
-                                                          <th>No</th>
-
-                                                          <th>Nama Produk</th>
-                                                          <th>Harga Satuan</th>
-                                                          <th>Jumlah</th>
-                                                          <th>Harga Total</th>
-                                                        </tr>
-                                                      </thead>
-                                                      <tbody>
-                                                        <?php
-                                                        //menampilkan data dari tabel
-
-                                                        $detail = mysqli_query($koneksi, "call getdetailpenjualan($kode_penjualan)");
-                                                        while (mysqli_next_result($koneksi)) {;
-                                                        }
-                                                        $t = 0;
-                                                        //membuat variabel untuk penomoran
-                                                        $no = 1;
-                                                        //		$jumlah = mysqli_num_rows($query);
-                                                        //echo ($jumlah);
-                                                        //perintah perulangan untuk menampilkan data
-                                                        while ($data = mysqli_fetch_assoc($detail)) {
-                                                          //membuat variabel untuk menampung data 
-                                                          $nama_produk = $data['nama_produk'];
-                                                          $harga_satuan = $data['harga_satuan'];
-                                                          $jumlah = $data['jumlah'];
-                                                          $satuan = $data['satuan'];
-                                                          $bayar = $data['bayar'];
-                                                        ?>
-                                                          <tr>
-                                                            <td><?= $no++ ?></td>
-
-                                                            <td><?= $nama_produk ?></td>
-                                                            <td>Rp.<?= number_format($harga_satuan, 0, ',', '.'); ?>-</td>
-                                                            <td><?= $jumlah . ' ' . $satuan ?></td>
-                                                            <td>Rp.<?= number_format($harga_satuan * $jumlah, 0, ',', '.'); ?>-</td>
-                                                          </tr>
-
-                                                        <?php $t += ($harga_satuan * $jumlah);
-                                                        } ?>
-                                                      </tbody>
-                                                    </table>
-                                                  </div>
-                                                  <div align="right">
-                                                    <div class="w-25 font-weight-bold">
-
-                                                      <div class="row text-left">
-                                                        <div class="col-5"> Total </div>
-                                                        <div class="col p-0 ">=</div>
-                                                        <div class="col-6">
-                                                          <?= number_format($t, 0, ',', '.') ?>
-                                                        </div>
-
-                                                        <div class="w-100"></div>
-
-                                                        <div class="col-5"> Tunai</div>
-                                                        <div class="col-1 p-0 ">=</div>
-                                                        <div class="col-6	">
-                                                          <?= number_format($bayar, 0, ',', '.') ?>
-                                                        </div>
-                                                        <div class="w-100">
-                                                          <hr class="hr">
-                                                        </div>
-
-                                                        <div class="col-5	"> Kembali </div>
-                                                        <div class="col-1 p-0 ">=</div>
-                                                        <div class="col-6">
-                                                          <?= number_format($bayar - $t, 0, ',', '.') ?>
-                                                        </div>
-                                                      </div>
-
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                  <div class="d-inline print">
-                                                    <a href="<?= $base_url . '/view/report?id=' . $kode_penjualan . '&date=' . date_format($date, 'd-m-Y H:i') ?>">
-                                                      <button type="button" class="btn btn-primary">
-                                                        <i class="fa fa-print"></i>&ensp;Cetak Nota
-                                                      </button>
-                                                    </a>
-                                                  </div>
-                                                  <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
 
                                           <!--printing-->
                                           <div class="d-inline print">
-                                            <a href="<?= $base_url . '/view/report?id=' . $kode_penjualan . '&date=' . date_format($date, 'd-m-Y H:i') ?>">
+                                            <a href="<?= $base_url . '/view/report?id=' . $kode_penjualan?>">
                                               <button type="button" class="btn btn-primary">
                                                 <i class="fa fa-print"></i>&ensp;Cetak Nota
                                               </button>
@@ -278,7 +175,7 @@
                                                   </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                  Yakin ingin menghapus penjualan pada <b><?= date_format($date, "d/m/Y") ?></b> <br>dengan kode prnjualan <b><?= $kode_penjualan ?></b> ?
+                                                  Yakin ingin menghapus penjualan dengan kode prnjualan <b><?= $kode_penjualan ?></b> ?
                                                 </div>
                                                 <div class="modal-footer">
                                                   <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
