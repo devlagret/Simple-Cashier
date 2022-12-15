@@ -102,7 +102,8 @@
                           </div>
                         </div>
                         <div class="col " align="right">
-                          <a class="btn btn-primary" href="<?=$base_url.'/function/laporanpdf?bulan='.$bulan.'&tahun='.$tahun?>"><i class="fa-regular fa-file-pdf fa-lg"></i> &ensp; Cetak PDF</a>
+                          <a class="btn btn-success" href="<?=$base_url.'/view/riwayat_penjualan?bulan='.$bulan.'&tahun='.$tahun?>"><i class="fa fa-circle-info"></i>&ensp;Detail</a>
+                          <a class="btn btn-primary" href="<?=$base_url.'/function/laporanpdf?bulan='.$bulan.'&tahun='.$tahun?>"><i class="fa-regular fa-file-pdf fa-lg"></i>&ensp;Cetak PDF</a>
                         </div>
                         <ul class="nav navbar-right panel_toolbox">
                           <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>

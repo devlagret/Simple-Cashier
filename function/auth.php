@@ -10,7 +10,8 @@
 			// cek cokkie dan username 
 			if ($key == hash('sha256',$row['username'])){
 				$_SESSION['status'] = "login";
-		 }}
+	
+		 }}	
 		 if (isset($_SESSION['status'])!="login"){
 		header("Location: http://localhost/kasir/view/login") ;
 		} 

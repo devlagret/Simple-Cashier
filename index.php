@@ -49,7 +49,7 @@ if (isset($_GET['add'])){
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             
-          <?php include $_SERVER['DOCUMENT_ROOT'].'/kasir/view/navbar.php';?>
+          <?php include $include_path.'/view/navbar.php';?>
 
         <!-- page content -->
         <div class="right_col" role="main">

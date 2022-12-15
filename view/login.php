@@ -1,5 +1,7 @@
-<?php include $_SERVER['DOCUMENT_ROOT'].'/kasir/function/config.php'; 
-include $include_path.'function/crud.php'?>
+<?php include $_SERVER['DOCUMENT_ROOT'].'/kasir/function/config.php';
+include $include_path . 'function/crud.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>

@@ -20,12 +20,16 @@ if(isset($_POST['login'])){
 			$_SESSION['username'] = $username;
 			//cek remember me
 			if(isset($_POST['rm'])){
+
 				//buat cookie
 				setcookie('id', $data['id_user'],time()+3600*24*2);
 				//setcookie('nama', hash('sha256', $data['nama']),time()+3600);
+				
 				setcookie('key', hash('sha256', $username),time()+3600*24*2);
-			}
 			header("location:".$base_url."/");
+			} else {
+				header("location:" . $base_url . "/");
+			}
 			// alihkan ke halaman  admin
 		}	}else{
 			header("Location: http://localhost/kasir/view/login?pesan=gagal") ;
