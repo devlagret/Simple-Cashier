@@ -159,7 +159,7 @@ function byrr() {
 	console.log("bayar clicked");
 	var total = document.getElementById("total");
 	var bayar = document.getElementById("jumlah-byr");
-	if(total.value > bayar.value ) {
+	if(total.value <= bayar.value ) {
 		console.log("uang kurang");
 		if(bayar.value == ""){
 		window.location.replace("http://localhost/kasir/view/kasir?info=uangkurang&uang=0&fjs");
@@ -168,6 +168,14 @@ function byrr() {
 	document.getElementById("frm-ksr-byr").submit();
 }
 
+}
+function byrfocus(){
+	document.getElementById('jumlah-byr').focus();
+}
+function setTanggal(link) {
+ var b = document.getElementById("select_bulan").value;
+ var t = document.getElementById("select_th").value;
+ window.location.replace("http://localhost/kasir/view/"+link+"?bulan="+b+"&tahun="+t);
 }
 
 

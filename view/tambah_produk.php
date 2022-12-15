@@ -12,6 +12,12 @@
 			echo '<div class="alert alert-danger" role="alert">Tambah Data Gagal </div>';
 		}
 	}
+	if (isset($_GET['info'])&&$_GET['name']) {
+		if ($_GET['info'] == 'duplicate') {
+			echo '<div class="alert alert-danger" role="alert">Produk Dengan Nama <b>"'.$_GET['name'].'"</b> Sudah Ada / Sudah Ditambahkan</div>';
+		} 
+	}
+
 	?>
 
 	<div class="container body">

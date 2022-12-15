@@ -25,16 +25,18 @@
   $qw = mysqli_query($koneksi, "select * from tbl_penjualan");
   while (mysqli_next_result($koneksi)) {;
   }
-  $range = getdaterange();
-  print_r($range);
-  echo $range['bulan_min'];
-  
+ 
   if(isset($_GET['bulan'])&&isset($_GET['tahun'])){
    $bulan = $_GET['bulan'];
   $tahun = $_GET['tahun'];
+  $range = getdaterange($tahun);
+  if($bulan > $range['bulan_max']||$bulan < $range['bulan_min']){
+    $bulan=$range['bulan_max'];
+  }
   } else {
     $bulan = date('n');
     $tahun = date('Y');
+    $range = getdaterange($tahun);
   } 
   ?>
 
@@ -75,9 +77,9 @@
                           <div class="form-group row">
                             <h5 class="control-label col-sm-auto mt-2 p-0">Bulan :</h5>
                             <div class="col-sm ">
-                              <select class="form-control">
+                              <select name="bulan" id="select_bulan" onChange="setTanggal('laporan_penjualan')" class="form-control">
                                 <?php for ($x = $range['bulan_max']; $x >= $range['bulan_min']; $x--) { ?>
-                                  <option <?php if ($x == date('n')) {
+                                  <option <?php echo 'value="'.$x.'"'; if ($x == $bulan) {
                                             echo 'selected';
                                           } ?>><?= convmonth($x) ?></option>
                                 <?php } ?>
@@ -89,9 +91,9 @@
                           <div class="form-group row">
                             <h5 class="control-label col-sm-auto mt-2 p-0">Tahun :</h5>
                             <div class="col-sm ">
-                              <select class="form-control">
+                              <select name="tahun" id="select_th" onChange="setTanggal('laporan_penjualan')" class="form-control">
                                 <?php for ($x = $range['th_max']; $x >= $range['th_min']; $x--) { ?>
-                                  <option <?php if ($x == date('Y')) {
+                                  <option <?php echo 'value="'.$x.'"';if ($x == $tahun) {
                                             echo 'selected';
                                           } ?>><?= $x ?></option>
                                 <?php } ?>
@@ -99,8 +101,8 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col">
-                          <a class="btn btn-primary ml-3" href="<?= $base_url ?>/view/produk.php">Daftar Produk</a>
+                        <div class="col " align="right">
+                          <a class="btn btn-primary" href="<?=$base_url.'/function/laporanpdf?bulan='.$bulan.'&tahun='.$tahun?>"><i class="fa-regular fa-file-pdf fa-lg"></i> &ensp; Cetak PDF</a>
                         </div>
                         <ul class="nav navbar-right panel_toolbox">
                           <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -118,9 +120,9 @@
                                     <tr>
                                       <th>No</th>
                                       <th>Nama Produk</th>
-                                      <th>Jumlah Penjualan</th>
+                                      <th>Jumlah Terjual</th>
                                       <th>Pendapatan</th>
-                                      <th class="text-center">Aksi</th>
+                                     
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -142,49 +144,16 @@
                                       $nama_prd = $data['nama_produk'];
                                       $j_penjualan = $data['jumlah'];
                                       $pdpt = $data['pendapatan'];
+                                      $stan = $data['satuan'];
                               
                                     ?>
                                       <tr>
                                         <td><?= $n++ ?></td>
                                         <td><?=$nama_prd?></td>
-                                        <td><?= $j_penjualan ?></td>
-                                        <td><?= $pdpt ?></td>
+                                        <td><?= $j_penjualan.' '.$stan?></td>
+                                        <td>Rp. <?= number_format( $pdpt , 0, ',', '.');?> -</td>
 
-                                        <td class="text-center">
-
-                                          <!--printing-->
-                                          <div class="d-inline print">
-                                            <a href="<?= $base_url . '/view/report?id=' . $kode_penjualan?>">
-                                              <button type="button" class="btn btn-primary">
-                                                <i class="fa fa-print"></i>&ensp;Cetak Nota
-                                              </button>
-                                            </a>
-                                          </div>
-
-                                          <!--delete-->
-                                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#del-pjl-<?= $id ?>"><i class="fa fa-trash"></i>&ensp;Hapus
-                                          </button>
-                                          <!-- Modal -->
-                                          <div class="modal fade" id="del-pjl-<?= $id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                              <div class="modal-content">
-                                                <div class="modal-header">
-                                                  <h5 class="modal-title" id="exampleModalLongTitle">PERINGATAN !!</h5>
-                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                  </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                  Yakin ingin menghapus penjualan dengan kode prnjualan <b><?= $kode_penjualan ?></b> ?
-                                                </div>
-                                                <div class="modal-footer">
-                                                  <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                                                  <a class="btn btn-danger" href="<?= $base_url . '/function/hapus?key=penjualan&id=' . $kode_penjualan ?>">Ya</a>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </td>
+                                    
                                       </tr>
                                     <?php } ?>
                                   </tbody>

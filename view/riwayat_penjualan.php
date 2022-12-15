@@ -20,7 +20,20 @@
 				echo'<div class="alert alert-danger" role="alert">
 				Edit Riwayat Penjualan Gagal </div>';
 					
-			}}?>
+			}}
+      if(isset($_GET['bulan'])&&isset($_GET['tahun'])){
+        $bulan = $_GET['bulan'];
+       $tahun = $_GET['tahun'];
+       $range = getdaterange($tahun);
+       if($bulan > $range['bulan_max']||$bulan < $range['bulan_min']){
+         $bulan=$range['bulan_max'];
+       }
+       } else {
+         $bulan = date('n');
+         $tahun = date('Y');
+         $range = getdaterange($tahun);
+       } 
+      ?>
  
     <div class="container body">
       <div class="main_container">
@@ -33,7 +46,7 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>Riwayat Penjualan</h3>
+                <h3>Riwayat Penjualan Bulan <?= convmonth($bulan) ?> tahun <?=$tahun?></h3>
               </div>
              
               <div class="title_right">
@@ -54,7 +67,38 @@
               <div class="col-md-12 col-sm-12  ">
                 <div class="x_panel">
                   <div class="x_title">
+                  <div class="row">
+                        <div class="col-md-auto">
+                          <div class="form-group row">
+                            <h5 class="control-label col-sm-auto mt-2 p-0">Bulan :</h5>
+                            <div class="col-sm ">
+                              <select name="bulan" id="select_bulan" onChange="setTanggal('riwayat_penjualan')" class="form-control">
+                                <?php for ($x = $range['bulan_max']; $x >= $range['bulan_min']; $x--) { ?>
+                                  <option <?php echo 'value="'.$x.'"'; if ($x == $bulan) {
+                                            echo 'selected';
+                                          } ?>><?= convmonth($x) ?></option>
+                                <?php } ?>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-auto">
+                          <div class="form-group row">
+                            <h5 class="control-label col-sm-auto mt-2 p-0">Tahun :</h5>
+                            <div class="col-sm ">
+                              <select name="tahun" id="select_th" onChange="setTanggal('riwayat_penjualan')" class="form-control">
+                                <?php for ($x = $range['th_max']; $x >= $range['th_min']; $x--) { ?>
+                                  <option <?php echo 'value="'.$x.'"';if ($x == $tahun) {
+                                            echo 'selected';
+                                          } ?>><?= $x ?></option>
+                                <?php } ?>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col " align="right">
                      <a class="btn btn-primary ml-3" href="<?=$base_url?>/view/produk.php">Daftar Produk</a>
+                     </div>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -62,7 +106,7 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                      <div class="row">
+                      <div class="row pt-3">
                           <div class="col-sm-12">
                             <font>
                     <div class="card-box table-responsive">
@@ -79,10 +123,12 @@
                      
 		<?php 
 		//menampilkan data dari tabel
-		$query = mysqli_query($koneksi, "SELECT * FROM tbl_penjualan order by id desc ");
+$b = mysqli_real_escape_string($koneksi, $bulan);
+$t = mysqli_real_escape_string($koneksi, $tahun);
+		$query = mysqli_query($koneksi, "call getsales($b,$t)");
     while(mysqli_next_result($koneksi)){;}  
 		//membuat variabel untuk penomoran
-		$no = 1;
+		$n= 1;
 		$jumlah = mysqli_num_rows($query);
 		//perintah perulangan untuk menampilkan data
 		while ($data= mysqli_fetch_assoc($query)){
@@ -96,7 +142,7 @@
       $date=date_create($tanggal_penjualan);
 		?>
 		<tr>
-			<td><?= $no++?></td>
+			<td><?= $n++?></td>
       <td><?php echo date_format($date," d/m/Y H:i");if(date_format($date,"Ymd")== date('Ymd')){echo ('&ensp;<span class="badge badge-success">Hari Ini</span>');} ?></td>
 			<td><?= $kode_penjualan?></td>
 			<td class="text-center" >

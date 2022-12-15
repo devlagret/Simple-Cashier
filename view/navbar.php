@@ -46,8 +46,8 @@ include $include_path.'function/auth.php';
                 </li>
                 <li><a href="<?=$base_url?>/view/riwayat_penjualan"><i class="fa fa-history"></i> Riwayat Penjualan </a>
             </li>
-            <!--<li><a href="<?=$base_url?>/view/laporan_penjualan"><i class="fa fa-calendar-days"></i> Laporan Penjualan </a>
-            </li>-->
+            <li><a href="<?=$base_url?>/view/laporan_penjualan"><i class="fa fa-calendar-days"></i> Laporan Penjualan </a>
+            </li>
 
                  
              

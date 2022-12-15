@@ -151,7 +151,7 @@ if(isset($_GET['uang'])){$tot_byr=$_GET['uang'];}
 <div class="form-group row ">
     <label for="jumlah-byr" class="col-sm-auto col-form-label">  Uang Dibayar: </label>
     <div class="col-sm-1">
-      <input type="number" id="jumlah-byr" tabindex="6" name="uangbyr" min="100" step="100" value="<?=$tot_byr?>" placeholder="Masukan Jumlah Uang yang Dibayarkan" class="num form-control " style="width:160px;" <?php if(!validatecart()){echo 'disabled';} ?>>
+      <input type="number" id="jumlah-byr" name="uangbyr" min="100" step="100" value="<?=$tot_byr?>" placeholder="Masukan Jumlah Uang yang Dibayarkan" class="num form-control " style="width:160px;" <?php if(!validatecart()){echo 'disabled';} ?>>
       <input type="submit" hidden /> 
     </div>
   </div>     
@@ -162,7 +162,7 @@ if(isset($_GET['uang'])){$tot_byr=$_GET['uang'];}
                       <button type="button" class="btn btn-info
                       " data-dismiss="modal">Close</button>
                       <button class="btn btn-primary" id="btn" type="reset">Reset</button>
-                      <button id="tbl-byr" type="button" tabindex="8" name="bayar" class="btn btn-success" onclick="byrr()" <?php if(!validatecart()){echo 'disabled';} ?>>Bayar</button>   
+                      <button id="tbl-byr" type="button" name="bayar" class="btn btn-success" onclick="byrr()" <?php if(!validatecart()){echo 'disabled';} ?>>Bayar</button>   
                   </form>
       </div>
     </div>

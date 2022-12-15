@@ -21,10 +21,9 @@ if(isset($_POST['login'])){
 			//cek remember me
 			if(isset($_POST['rm'])){
 				//buat cookie
-				//setcookie('status',hash('sha256', 'login'),time()+3600);
-				setcookie('id', $data['id_user'],time()+3600*15);
+				setcookie('id', $data['id_user'],time()+3600*24*2);
 				//setcookie('nama', hash('sha256', $data['nama']),time()+3600);
-				setcookie('key', hash('sha256', $username),time()+3600*15);
+				setcookie('key', hash('sha256', $username),time()+3600*24*2);
 			}
 			header("location:".$base_url."/");
 			// alihkan ke halaman  admin
@@ -42,12 +41,19 @@ if(isset($_POST['tambah_produk'])){
 		$add_stok = toInt($_POST['stok']);
 		$add_satuan = mysqli_real_escape_string($koneksi, $_POST['satuan']);
 		$add_stok_min = toInt($_POST['stok-min']);
-		$add = mysqli_query($koneksi, "INSERT INTO `tbl_produk` (`id`, `nama_produk`, `harga_satuan`, `stok`, `stok_min`, `satuan`) VALUES (NULL, '$add_nama_produk', '$add_harga_satuan', '$add_stok', '$add_stok_min','$add_satuan')");
-		if ($add) {
-			header("Location:" . $base_url . "/view/tambah_produk?add=berhasil");
-		} else {
-			header("Location:" . $base_url . "/view/tambah_produk?add=gagal");
-		}
+		try {
+			$add = mysqli_query($koneksi, "INSERT INTO `tbl_produk` (`id`, `nama_produk`, `harga_satuan`, `stok`, `stok_min`, `satuan`) VALUES (NULL, '$add_nama_produk', '$add_harga_satuan', '$add_stok', '$add_stok_min','$add_satuan')");
+			if ($add) {
+				header("Location:" . $base_url . "/view/tambah_produk?add=berhasil");
+			} else {
+				header("Location:" . $base_url . "/view/tambah_produk?add=gagal");
+			}
+		}catch(mysqli_sql_exception $e){
+			if(str_contains($e, 'Duplicate entry')) {
+				header("Location:" . $base_url . "/view/tambah_produk?info=duplicate&name=".$add_nama_produk);
+			}
+					die("Error inserting user details into database: " .  $e->getMessage());
+				}
 	}else{header("Location:".$base_url."/forbiden");}
 }
 if(isset($_POST['add_stkprd'])){
@@ -79,13 +85,20 @@ if (isset($_POST['edit_produk'])) {
 	$ed_stok_min = toInt($_POST['stok-min']);
 	$ed_satuan = mysqli_real_escape_string($koneksi, $_POST['satuan']);
 	if (auth()) {
-		$edit = mysqli_query($koneksi, "UPDATE tbl_produk SET nama_produk = '$ed_nama_produk', harga_satuan = '$ed_harga_satuan', stok = '$ed_stok',stok_min = '$ed_stok_min' , satuan = '$ed_satuan' WHERE id='$id'");
+		try {
+			$edit = mysqli_query($koneksi, "UPDATE tbl_produk SET nama_produk = '$ed_nama_produk', harga_satuan = '$ed_harga_satuan', stok = '$ed_stok',stok_min = '$ed_stok_min' , satuan = '$ed_satuan' WHERE id='$id'");
 
-		if ($edit) {
-			header("Location:" . $base_url . "/view/produk?update=berhasil");
-		} else {
-			header("Location:" . $base_url . "/view/produk?update=gagal");
-		}
+			if ($edit) {
+				header("Location:" . $base_url . "/view/produk?update=berhasil");
+			} else {
+				header("Location:" . $base_url . "/view/produk?update=gagal");
+			}
+		}catch(mysqli_sql_exception $e){
+			if(str_contains($e, 'Duplicate entry')) {
+				header("Location:" . $base_url . "/view/produk?info=duplicate&name=".$ed_nama_produk);
+			}
+					die("Error inserting user details into database: " .  $e->getMessage());
+				}
 	}else{header("Location:".$base_url."/forbiden");}
 }
 if(isset($_GET['metode'])){
@@ -152,7 +165,7 @@ if (isset($_GET['bayar'])){
 $total = $_GET['total'];
 $uangbyr = $_GET['uangbyr'];
 if($uangbyr==null){$uangbyr=0;}
-if($total < $uangbyr){
+if($total <= $uangbyr){
 	if(validatecart()&&auth()){
 		$kode = getcode();
 		echo  $kode;
@@ -334,12 +347,32 @@ function convmonth(int $month){
 }else{return 'error';}
 }
 /**
- * Used to get date range of sales. Returns max and min month and year.
+ * Used to get date range of sales. Returns max and min month in inputed year from database.
+ * @param int $year
  * @return array|bool|null
  */
-function getdaterange(){
+function getdaterange(int $year){
 include 'config.php';
+$y = mysqli_real_escape_string($koneksi,$year);
 $daterange = array();
-$rg = mysqli_query($koneksi,"call getsaledaterange()");
+$rg = mysqli_query($koneksi,"call getsaledaterange($y)");
 return $daterange = mysqli_fetch_array($rg);
 }
+/**
+ * Get Sales Report 
+ *   Get sales report from certain month in certain year 
+ * @param int $month 
+ * @param int $year
+ * @return array
+ */
+function getsalesreport(int $month, int $year){
+	include 'config.php';
+	$m = mysqli_real_escape_string($koneksi, $month);
+	$y = mysqli_real_escape_string($koneksi, $year);
+$dat = array();
+    $lp = mysqli_query($koneksi, "call getlappjl($m , $y)");
+    while($r = mysqli_fetch_assoc($lp)){
+			$dat[] = $r;
+		}
+		return $dat;
+} 
