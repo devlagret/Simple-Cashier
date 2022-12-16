@@ -43,6 +43,16 @@ if (isset($_GET['add'])){
     Tambah Stok Gagal </div>';
   }
 }
+if (isset($_GET['edit'])){
+  if ($_GET['edit']=='berhasil'){
+    echo '<div class="alert alert-success" role="alert">Edit Data Berhasil</div>';}
+    elseif ($_GET['edit']=='warn'){
+    echo '<div class="alert alert-warning" role="alert">Harap Masukan Nilai Lebih Dari 0</div>';}
+    elseif($_GET['edit']=='gagal'){
+    echo'<div class="alert alert-danger" role="alert">
+    Edit Data Gagal </div>';
+  }
+}
     ?>
     <div class="container body">
       <div class="main_container">

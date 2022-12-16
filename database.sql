@@ -35,7 +35,7 @@ CREATE TABLE `config` (
 
 LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
-INSERT INTO `config` VALUES ('alamat_toko','Karanganyar'),('nama_toko','Toko'),('no_telp','081222333444');
+INSERT INTO `config` VALUES ('alamat_toko',' Karanganyar, Karang'),('nama_toko','Nama Toko'),('no_telp','081234567890');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,6 +83,15 @@ begin
 	
 	update tbl_produk set stok = (select stok from tbl_produk where nama_produk = new.nama_produk)-new.jumlah where nama_produk = new.nama_produk;
 end */;;
+
+CREATE TRIGGER stokhandler
+AFTER INSERT
+ON tbl_detail_penjualan FOR EACH ROW
+begin 
+
+	update tbl_produk set stok = (select stok from tbl_produk where nama_produk = new.nama_produk)-new.jumlah where nama_produk = new.nama_produk;
+end
+
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -434,7 +443,7 @@ CREATE  PROCEDURE `getlappjl`(m int,
 y int)
 begin
 
-		select
+	select
 
 	tbl_penjualan.*,
 
@@ -447,6 +456,8 @@ begin
 	sum(tbl_produk.harga_satuan *
 
 	tbl_detail_penjualan.jumlah) as pendapatan,
+
+	tbl_produk.harga_satuan,
 
 	tbl_produk.satuan
 
@@ -565,6 +576,95 @@ begin
 	select * from tbl_produk order by nama_produk;
 
 END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getsaledaterange` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE  PROCEDURE `getsaledaterange`(y int)
+begin
+
+	select
+
+	min(year(tbl_penjualan.tanggal_penjualan)) as th_min,
+
+	max(year(tbl_penjualan.tanggal_penjualan)) as th_max,
+
+	a.bulan_min,
+
+	a.bulan_max
+
+from
+
+	(
+
+	select
+
+		min(month(tanggal_penjualan)) as bulan_min,
+
+		max(month(tanggal_penjualan)) as bulan_max
+
+	from
+
+		tbl_penjualan
+
+	where
+
+		year(tanggal_penjualan) = y
+) a ,
+
+	tbl_penjualan ;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getsales` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE  PROCEDURE `getsales`(m int,
+
+y int)
+begin
+
+	select
+
+	*
+
+from
+
+	tbl_penjualan
+
+where
+
+	month(tbl_penjualan.tanggal_penjualan) = m
+
+	and year(tbl_penjualan.tanggal_penjualan) = y
+
+order by
+
+	id desc;
+
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -803,4 +903,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-09 14:51:34
+-- Dump completed on 2022-12-16  6:57:32
