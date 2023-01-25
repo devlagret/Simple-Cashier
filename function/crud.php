@@ -342,9 +342,11 @@ function auth(){
  * Converts month.
  * Converts number to month in indonesian language
  * @param int $mouth
- * @return String
+
  */
 function convmonth(int $month){
+	//if ($month == null) {
+	//	return ' ';}
 	if(0< $month && $month <=12){
 	$bln = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli','Agustus', 'September', 'Oktober', 'November', 'Desember'];
 	return $bln[$month-1];

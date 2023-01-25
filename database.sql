@@ -35,7 +35,7 @@ CREATE TABLE `config` (
 
 LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
-INSERT INTO `config` VALUES ('alamat_toko',' Karanganyar, Karang'),('nama_toko','Nama Toko'),('no_telp','081234567890');
+INSERT INTO `config` VALUES ('alamat_toko','   Karanganyar, Karanganyar'),('nama_toko','Nama Toko'),('no_telp','081234567890');
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -55,7 +55,7 @@ CREATE TABLE `tbl_detail_penjualan` (
   KEY `tbl_detail_penjualan_FK` (`kode_penjualan`),
   KEY `tbl_detail_penjualan_FK_1` (`nama_produk`),
   CONSTRAINT `tbl_detail_penjualan_FK` FOREIGN KEY (`kode_penjualan`) REFERENCES `tbl_penjualan` (`kode_penjualan`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `tbl_detail_penjualan_FK_1` FOREIGN KEY (`nama_produk`) REFERENCES `tbl_produk` (`nama_produk`) ON UPDATE CASCADE
+  CONSTRAINT `tbl_detail_penjualan_FK_1` FOREIGN KEY (`nama_produk`) REFERENCES `tbl_produk` (`nama_produk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -83,15 +83,6 @@ begin
 	
 	update tbl_produk set stok = (select stok from tbl_produk where nama_produk = new.nama_produk)-new.jumlah where nama_produk = new.nama_produk;
 end */;;
-
-CREATE TRIGGER stokhandler
-AFTER INSERT
-ON tbl_detail_penjualan FOR EACH ROW
-begin 
-
-	update tbl_produk set stok = (select stok from tbl_produk where nama_produk = new.nama_produk)-new.jumlah where nama_produk = new.nama_produk;
-end
-
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -204,6 +195,10 @@ LOCK TABLES `tmp_penjualan` WRITE;
 /*!40000 ALTER TABLE `tmp_penjualan` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tmp_penjualan` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'kasir'
+--
 
 --
 -- Dumping routines for database 'kasir'
@@ -861,7 +856,8 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE  PROCEDURE `setconfig`(x varchar(20), y varchar (30))
+CREATE  PROCEDURE `setconfig`(x varchar(200
+), y varchar (30))
 begin
 
 	update config SET value = x where name = y;
@@ -903,4 +899,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-16  6:57:32
+-- Dump completed on 2023-01-25  8:21:30

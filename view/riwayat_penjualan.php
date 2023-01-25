@@ -73,11 +73,15 @@
                             <h5 class="control-label col-sm-auto mt-2 p-0">Bulan :</h5>
                             <div class="col-sm ">
                               <select name="bulan" id="select_bulan" onChange="setTanggal('riwayat_penjualan')" class="form-control">
-                                <?php for ($x = $range['bulan_max']; $x >= $range['bulan_min']; $x--) { ?>
+                                <?php if ($range['bulan_min'] != null && $range['bulan_max'] != null) {
+                                for ($x = $range['bulan_max']; $x >= $range['bulan_min']; $x--) { ?>
                                   <option <?php echo 'value="'.$x.'"'; if ($x == $bulan) {
                                             echo 'selected';
                                           } ?>><?= convmonth($x) ?></option>
-                                <?php } ?>
+                                <?php }
+                                } else {
+                                  echo '<option>' . convmonth($bulan) . '</option>';
+                                } ?>
                               </select>
                             </div>
                           </div>
@@ -87,11 +91,15 @@
                             <h5 class="control-label col-sm-auto mt-2 p-0">Tahun :</h5>
                             <div class="col-sm ">
                               <select name="tahun" id="select_th" onChange="setTanggal('riwayat_penjualan')" class="form-control">
-                                <?php for ($x = $range['th_max']; $x >= $range['th_min']; $x--) { ?>
+                                <?php if ($range['th_max'] != null && $range['th_min'] != null) {
+                                for ($x = $range['th_max']; $x >= $range['th_min']; $x--) { ?>
                                   <option <?php echo 'value="'.$x.'"';if ($x == $tahun) {
                                             echo 'selected';
                                           } ?>><?= $x ?></option>
-                                <?php } ?>
+                                <?php }
+                                 } else {
+                                  echo '<option>'.$tahun.'</option>';
+                                }?>
                               </select>
                             </div>
                           </div>

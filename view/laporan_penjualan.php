@@ -25,19 +25,19 @@
   $qw = mysqli_query($koneksi, "select * from tbl_penjualan");
   while (mysqli_next_result($koneksi)) {;
   }
- 
-  if(isset($_GET['bulan'])&&isset($_GET['tahun'])){
-   $bulan = $_GET['bulan'];
-  $tahun = $_GET['tahun'];
-  $range = getdaterange($tahun);
-  if($bulan > $range['bulan_max']||$bulan < $range['bulan_min']){
-    $bulan=$range['bulan_max'];
-  }
+
+  if (isset($_GET['bulan']) && isset($_GET['tahun'])) {
+    $bulan = $_GET['bulan'];
+    $tahun = $_GET['tahun'];
+    $range = getdaterange($tahun);
+    if ($bulan > $range['bulan_max'] || $bulan < $range['bulan_min']) {
+      $bulan = $range['bulan_max'];
+    }
   } else {
     $bulan = date('n');
     $tahun = date('Y');
     $range = getdaterange($tahun);
-  } 
+  }
   ?>
 
   <div class="container body">
@@ -78,11 +78,19 @@
                             <h5 class="control-label col-sm-auto mt-2 p-0">Bulan :</h5>
                             <div class="col-sm ">
                               <select name="bulan" id="select_bulan" onChange="setTanggal('laporan_penjualan')" class="form-control">
-                                <?php for ($x = $range['bulan_max']; $x >= $range['bulan_min']; $x--) { ?>
-                                  <option <?php echo 'value="'.$x.'"'; if ($x == $bulan) {
-                                            echo 'selected';
-                                          } ?>><?= convmonth($x) ?></option>
-                                <?php } ?>
+                                <?php if($range['bulan_min']!=null && $range['bulan_max']!=null){
+                                  for ($x = $range['bulan_max']; $x >= $range['bulan_min']; $x--) { ?>
+                                  <option <?php echo 'value="' . $x . '"';
+                                  if ($x == $bulan) {
+                                    echo 'selected';
+                                  } ?>><?=
+                                     convmonth($x)
+                                     ?></option>
+                                <?php }
+                                 } else {
+                                  echo '<option>'.convmonth($bulan).'</option>';
+                                }
+                                ?>
                               </select>
                             </div>
                           </div>
@@ -92,18 +100,23 @@
                             <h5 class="control-label col-sm-auto mt-2 p-0">Tahun :</h5>
                             <div class="col-sm ">
                               <select name="tahun" id="select_th" onChange="setTanggal('laporan_penjualan')" class="form-control">
-                                <?php for ($x = $range['th_max']; $x >= $range['th_min']; $x--) { ?>
-                                  <option <?php echo 'value="'.$x.'"';if ($x == $tahun) {
+                                <?php if($range['th_max']!=null && $range['th_min']!=null){
+                                  for ($x = $range['th_max']; $x >= $range['th_min']; $x--) { ?>
+                                  <option <?php echo 'value="' . $x . '"';
+                                          if ($x == $tahun) {
                                             echo 'selected';
-                                          } ?>><?= $x ?></option>
-                                <?php } ?>
+                                          } ?>><?= $x ?>  
+                                <?php }
+                                } else {
+                                  echo '<option>'.$tahun.'</option>';
+                                }?>
                               </select>
                             </div>
                           </div>
                         </div>
                         <div class="col " align="right">
-                          <a class="btn btn-success" href="<?=$base_url.'/view/riwayat_penjualan?bulan='.$bulan.'&tahun='.$tahun?>"><i class="fa fa-circle-info"></i>&ensp;Detail</a>
-                          <a class="btn btn-primary" href="<?=$base_url.'/function/laporanpdf?bulan='.$bulan.'&tahun='.$tahun?>"><i class="fa-regular fa-file-pdf fa-lg"></i>&ensp;Cetak PDF</a>
+                          <a class="btn btn-success" href="<?= $base_url . '/view/riwayat_penjualan?bulan=' . $bulan . '&tahun=' . $tahun ?>"><i class="fa fa-circle-info"></i>&ensp;Detail</a>
+                          <a class="btn btn-primary" href="<?= $base_url . '/function/laporanpdf?bulan=' . $bulan . '&tahun=' . $tahun ?>"><i class="fa-regular fa-file-pdf fa-lg"></i>&ensp;Cetak PDF</a>
                         </div>
                         <ul class="nav navbar-right panel_toolbox">
                           <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -123,7 +136,7 @@
                                       <th>Nama Produk</th>
                                       <th>Jumlah Terjual</th>
                                       <th>Pendapatan</th>
-                                     
+
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -146,15 +159,15 @@
                                       $j_penjualan = $data['jumlah'];
                                       $pdpt = $data['pendapatan'];
                                       $stan = $data['satuan'];
-                              
+
                                     ?>
                                       <tr>
                                         <td><?= $n++ ?></td>
-                                        <td><?=$nama_prd?></td>
-                                        <td><?= $j_penjualan.' '.$stan?></td>
-                                        <td>Rp. <?= number_format( $pdpt , 0, ',', '.');?> -</td>
+                                        <td><?= $nama_prd ?></td>
+                                        <td><?= $j_penjualan . ' ' . $stan ?></td>
+                                        <td>Rp. <?= number_format($pdpt, 0, ',', '.'); ?> -</td>
 
-                                    
+
                                       </tr>
                                     <?php } ?>
                                   </tbody>
