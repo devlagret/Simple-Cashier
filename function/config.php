@@ -13,7 +13,6 @@ $tab_icon_path = $base_url.'/images/ico.png';
 $tab_icon_file_type ='png';
 //index config
 $img_profile_path_index = $base_url.'/images/img.jpg';
-
 //
 $font_size='1.0rem';
 ?>

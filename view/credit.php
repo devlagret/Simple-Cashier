@@ -12,8 +12,6 @@
 <h3 class="m-0">Special Thanks to:</h3>
 <div class="m-1 p-1" align="left">
 <i class="fa-solid fa-circle fa-2xs"></i>&ensp;Guru</br>
-
-
 </div>
 <h3 class="m-0">Made by Kelompok 1</h3>
 <h2 class="mt-0">Anggota :</h2>
@@ -22,15 +20,10 @@
 <i class="fa-solid fa-circle fa-2xs"></i>&ensp;Renata Kurniawati</br>
 <i class="fa-solid fa-circle fa-2xs"></i>&ensp;Yoga Satria Pradika</br>
 <i class="fa-solid fa-circle fa-2xs"></i>&ensp;Ignatius Zulio APP</br>
-
-</div>
-
-
 </div>
 </div>
 </div>
 </div>
-
-
+</div>
   </body>
 </html>
